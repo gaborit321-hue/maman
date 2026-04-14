@@ -1,0 +1,20 @@
+{
+  "name": "Programme Jacqueline",
+  "short_name": "Programme",
+  "description": "Programme Sport & Renforcement — 8 semaines progressives",
+  "start_url": "/maman/index.html",
+  "scope": "/maman/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f2ec",
+  "theme_color": "#f5f2ec",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "icon2.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
