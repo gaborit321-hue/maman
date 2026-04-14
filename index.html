@@ -35,10 +35,10 @@ body {
   min-height:100vh; padding:36px 22px 100px;
 }
 header { max-width:680px; margin:0 auto 44px; border-bottom:1px solid var(--border2); padding-bottom:20px; }
-.hdr-top { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-.hdr-title { font-family:'Playfair Display',serif; font-size:44px; line-height:1; font-weight:700; }
+.hdr-top { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
+.hdr-title { font-family:'Playfair Display',serif; font-size:44px; line-height:1; font-weight:700; flex-shrink:0; }
 .hdr-title span { color:var(--accent); }
-.hdr-right { text-align:right; font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:.07em; line-height:1.9; }
+.hdr-right { text-align:right; font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:.07em; line-height:1.9; flex-shrink:1; min-width:0; }
 .hdr-week-badge { display:inline-block; margin-top:6px; font-family:'DM Mono',monospace; font-size:11px; font-weight:500; padding:4px 12px; border-radius:6px; letter-spacing:.05em; }
 .main { max-width:680px; margin:0 auto; display:flex; flex-direction:column; gap:36px; }
 .slabel { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; display:flex; align-items:center; gap:10px; }
@@ -71,11 +71,11 @@ header { max-width:680px; margin:0 auto 44px; border-bottom:1px solid var(--bord
 .exo-list { padding:4px 0; }
 .exo-item { padding:14px 20px; border-bottom:1px solid var(--border); }
 .exo-item:last-child { border-bottom:none; }
-.exo-top { display:grid; grid-template-columns:1fr auto; align-items:start; gap:12px; }
+.exo-top { display:grid; grid-template-columns:1fr 48px; align-items:start; gap:8px; }
 .exo-num  { font-family:'DM Mono',monospace; font-size:9px; color:var(--dim); letter-spacing:.08em; margin-bottom:2px; }
 .exo-name { font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px; }
 .exo-charge { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:3px; }
-.exo-sets { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; line-height:1; text-align:right; }
+.exo-sets { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; line-height:1; text-align:right; width:48px; flex-shrink:0; }
 .exo-sets small { display:block; font-family:'DM Mono',monospace; font-size:9px; font-weight:400; color:var(--muted); letter-spacing:.05em; margin-top:2px; }
 .sa .exo-sets { color:var(--accent); }
 .sb .exo-sets { color:var(--blue); }
@@ -138,7 +138,9 @@ footer { max-width:680px; margin:60px auto 0; border-top:1px solid var(--border)
 
 @media(max-width:580px){
   body { padding:20px 14px 80px; }
-  .hdr-title { font-size:34px; }
+  .hdr-title { font-size:28px; }
+  .hdr-right { font-size:9px; letter-spacing:.04em; }
+  .hdr-week-badge { font-size:10px; padding:3px 8px; }
   .week-strip { gap:3px; }
   .w-badge { font-size:8px; padding:2px 2px; }
   .tips-grid { grid-template-columns:1fr; }
@@ -146,6 +148,7 @@ footer { max-width:680px; margin:60px auto 0; border-top:1px solid var(--border)
   .prog-week:nth-child(n+5) { border-top:1px solid var(--border); }
   .seance-header { padding:12px 14px 10px; }
   .exo-item { padding:12px 14px; }
+  .exo-sets { font-size:20px; }
 }
 </style>
 </head>
@@ -167,7 +170,10 @@ footer { max-width:680px; margin:60px auto 0; border-top:1px solid var(--border)
 
 <footer>
   <span>PROGRAMME JACQUELINE · RENFORCEMENT · v1.0</span>
-  <span id="footer-week"></span>
+  <span style="display:flex;align-items:center;gap:14px;">
+    <a href="programme_jacqueline.pdf" target="_blank" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);text-decoration:none;letter-spacing:.07em;border:1px solid rgba(201,58,31,.3);padding:3px 10px;border-radius:5px;" onmouseover="this.style.background='rgba(201,58,31,.08)'" onmouseout="this.style.background='none'">↓ PDF complet</a>
+    <span id="footer-week"></span>
+  </span>
 </footer>
 
 <script>
