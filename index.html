@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programme Jacqueline</title>
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Jacqueline">
+<meta name="theme-color" content="#f5f2ec">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #f5f2ec;
+  --bg2:   #edeae3;
+  --bg3:   #e4e0d8;
+  --border:  rgba(0,0,0,0.07);
+  --border2: rgba(0,0,0,0.14);
+  --text:  #1c1b18;
+  --muted: #7a7670;
+  --dim:   #b0ada6;
+  --accent:#c93a1f;
+  --blue:  #2563c4;
+  --purple:#7c3aed;
+  --green: #1a9e4a;
+  --a-bg:  rgba(201,58,31,.09);
+  --b-bg:  rgba(37,99,196,.09);
+  --c-bg:  rgba(124,58,237,.09);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'DM Sans',sans-serif; font-size:14px; line-height:1.6;
+  min-height:100vh; padding:36px 22px 100px;
+}
+header { max-width:680px; margin:0 auto 44px; border-bottom:1px solid var(--border2); padding-bottom:20px; }
+.hdr-top { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.hdr-title { font-family:'Playfair Display',serif; font-size:44px; line-height:1; font-weight:700; }
+.hdr-title span { color:var(--accent); }
+.hdr-right { text-align:right; font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:.07em; line-height:1.9; }
+.hdr-week-badge { display:inline-block; margin-top:6px; font-family:'DM Mono',monospace; font-size:11px; font-weight:500; padding:4px 12px; border-radius:6px; letter-spacing:.05em; }
+.main { max-width:680px; margin:0 auto; display:flex; flex-direction:column; gap:36px; }
+.slabel { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; display:flex; align-items:center; gap:10px; }
+.slabel::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* WEEK STRIP */
+.week-strip { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+.w-day { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:9px 4px; text-align:center; }
+.w-day.today { border-color:var(--accent); background:rgba(201,58,31,.06); }
+.w-day.today .w-dname { color:var(--accent); font-weight:600; }
+.w-dname { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.w-badge { display:block; font-size:9px; font-weight:600; padding:3px 4px; border-radius:5px; line-height:1.3; }
+.w-badge.ba  { background:var(--a-bg);  color:var(--accent); border:1px solid rgba(201,58,31,.2); }
+.w-badge.bb  { background:var(--b-bg);  color:var(--blue);   border:1px solid rgba(37,99,196,.2); }
+.w-badge.bc  { background:var(--c-bg);  color:var(--purple); border:1px solid rgba(124,58,237,.2); }
+.w-badge.bgy { background:rgba(26,158,74,.09); color:var(--green); border:1px solid rgba(26,158,74,.2); }
+.w-badge.bx  { background:rgba(0,0,0,.04); color:var(--muted); border:1px solid var(--border); }
+
+/* SÉANCE CARD */
+.seance-card { background:var(--bg2); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.seance-header { padding:16px 20px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:14px; }
+.seance-letter { font-family:'Playfair Display',serif; font-size:38px; font-weight:700; line-height:1; flex-shrink:0; }
+.sa .seance-letter { color:var(--accent); }
+.sb .seance-letter { color:var(--blue); }
+.sc .seance-letter { color:var(--purple); }
+.seance-info { flex:1; }
+.seance-name { font-size:14px; font-weight:600; color:var(--text); margin-bottom:2px; }
+.seance-meta { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:.05em; }
+.warmup-banner { padding:10px 20px; background:rgba(26,158,74,.06); border-bottom:1px solid rgba(26,158,74,.15); font-size:11px; color:#0f7a3a; font-family:'DM Mono',monospace; letter-spacing:.03em; }
+.exo-list { padding:4px 0; }
+.exo-item { padding:14px 20px; border-bottom:1px solid var(--border); }
+.exo-item:last-child { border-bottom:none; }
+.exo-top { display:grid; grid-template-columns:1fr auto; align-items:start; gap:12px; }
+.exo-num  { font-family:'DM Mono',monospace; font-size:9px; color:var(--dim); letter-spacing:.08em; margin-bottom:2px; }
+.exo-name { font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px; }
+.exo-charge { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:3px; }
+.exo-sets { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; line-height:1; text-align:right; }
+.exo-sets small { display:block; font-family:'DM Mono',monospace; font-size:9px; font-weight:400; color:var(--muted); letter-spacing:.05em; margin-top:2px; }
+.sa .exo-sets { color:var(--accent); }
+.sb .exo-sets { color:var(--blue); }
+.sc .exo-sets { color:var(--purple); }
+.exo-how { display:none; margin-top:10px; font-size:12px; color:var(--muted); line-height:1.75; background:var(--bg); border-radius:8px; padding:12px 14px; border:1px solid var(--border); }
+.exo-how.open { display:block; animation:fadeIn .2s ease; }
+.exo-toggle { font-family:'DM Mono',monospace; font-size:9px; color:var(--dim); letter-spacing:.06em; margin-top:6px; display:inline-flex; align-items:center; gap:4px; cursor:pointer; user-select:none; }
+.exo-toggle::before { content:'▸'; transition:transform .2s; }
+.exo-toggle.open::before { transform:rotate(90deg); }
+
+/* DAY CARDS */
+.day-card { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:32px 24px; text-align:center; }
+.day-icon  { font-size:36px; margin-bottom:14px; }
+.day-title { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.day-sub   { font-size:12px; color:var(--muted); line-height:1.75; }
+.cardio-tip { margin-top:16px; background:rgba(26,158,74,.07); border:1px solid rgba(26,158,74,.2); border-radius:8px; padding:10px 14px; font-size:11px; color:#0f7a3a; line-height:1.6; }
+
+/* NEXT SEANCE */
+.next-card { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.next-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+.next-val   { font-size:13px; font-weight:600; color:var(--text); }
+
+/* PROGRESS TRACK */
+.prog-track { background:var(--bg2); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.prog-header { padding:14px 18px 12px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.prog-title  { font-size:13px; font-weight:600; }
+.prog-count  { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); }
+.prog-weeks  { display:grid; grid-template-columns:repeat(8,1fr); }
+.prog-week   { padding:10px 6px; text-align:center; border-right:1px solid var(--border); }
+.prog-week:last-child { border-right:none; }
+.prog-week.done    { background:rgba(26,158,74,.07); }
+.prog-week.current { background:rgba(201,58,31,.07); }
+.prog-wnum   { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:.08em; margin-bottom:4px; }
+.prog-wlabel { font-size:9px; font-weight:600; color:var(--dim); line-height:1.3; }
+.prog-week.done    .prog-wlabel { color:var(--green); }
+.prog-week.current .prog-wlabel { color:var(--accent); }
+.prog-dot { width:6px; height:6px; border-radius:50%; background:var(--border2); margin:6px auto 0; }
+.prog-week.done    .prog-dot { background:var(--green); }
+.prog-week.current .prog-dot { background:var(--accent); }
+
+/* TIPS */
+.tips-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.tip-card  { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px; }
+.tip-num   { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; color:rgba(0,0,0,.08); line-height:1; margin-bottom:6px; }
+.tip-title { font-size:12px; font-weight:600; margin-bottom:4px; }
+.tip-body  { font-size:11px; color:var(--muted); line-height:1.6; }
+
+.note-box { font-size:11px; color:var(--muted); background:rgba(37,99,196,.05); border:1px solid rgba(37,99,196,.15); border-radius:8px; padding:10px 14px; margin-top:10px; line-height:1.65; }
+.warn-box { font-size:11px; color:#a83218; background:rgba(201,58,31,.05); border:1px solid rgba(201,58,31,.2); border-radius:8px; padding:10px 14px; margin-top:10px; line-height:1.65; }
+
+footer { max-width:680px; margin:60px auto 0; border-top:1px solid var(--border); padding-top:16px; font-family:'DM Mono',monospace; font-size:10px; color:var(--dim); letter-spacing:.07em; display:flex; justify-content:space-between; }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.main > * { animation:fadeIn .45s ease both; }
+.main > *:nth-child(1){animation-delay:.05s}
+.main > *:nth-child(2){animation-delay:.10s}
+.main > *:nth-child(3){animation-delay:.15s}
+.main > *:nth-child(4){animation-delay:.20s}
+.main > *:nth-child(5){animation-delay:.25s}
+
+@media(max-width:580px){
+  body { padding:20px 14px 80px; }
+  .hdr-title { font-size:34px; }
+  .week-strip { gap:3px; }
+  .w-badge { font-size:8px; padding:2px 2px; }
+  .tips-grid { grid-template-columns:1fr; }
+  .prog-weeks { grid-template-columns:repeat(4,1fr); }
+  .prog-week:nth-child(n+5) { border-top:1px solid var(--border); }
+  .seance-header { padding:12px 14px 10px; }
+  .exo-item { padding:12px 14px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <div class="hdr-title">Programme<br><span>Jacqueline</span></div>
+    <div class="hdr-right">
+      Renforcement · Équilibre<br>
+      <span id="hdr-age"></span> · 153 cm · 43 kg<br>
+      <span id="hdr-date"></span><br>
+      <span class="hdr-week-badge" id="hdr-week-badge"></span>
+    </div>
+  </div>
+</header>
+
+<div class="main" id="main-content"></div>
+
+<footer>
+  <span>PROGRAMME JACQUELINE · RENFORCEMENT · v1.0</span>
+  <span id="footer-week"></span>
+</footer>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────
+const PROGRAMME_START = new Date('2025-04-20'); // lundi 20 avril
+const BIRTH = new Date('1957-12-28');
+
+// Planning semaine : index 0=lun … 6=dim
+// Gym le LUNDI, Aqua gym le JEUDI
+// Séances haltères : MAR (A), MER (B), VEN (C)  — 1 jour de récup entre chaque
+const WEEK = [
+  { idx:0, nom:'Lun', seance:null, type:'gym',    badge:'bgy', label:'Gym'       },
+  { idx:1, nom:'Mar', seance:'A',  type:'seance', badge:'ba',  label:'Séance A'  },
+  { idx:2, nom:'Mer', seance:'B',  type:'seance', badge:'bb',  label:'Séance B'  },
+  { idx:3, nom:'Jeu', seance:null, type:'aqua',   badge:'bgy', label:'Aqua gym'  },
+  { idx:4, nom:'Ven', seance:'C',  type:'seance', badge:'bc',  label:'Séance C'  },
+  { idx:5, nom:'Sam', seance:null, type:'repos',  badge:'bx',  label:'Repos'     },
+  { idx:6, nom:'Dim', seance:null, type:'repos',  badge:'bx',  label:'Repos'     },
+];
+
+// ── EXPLICATIONS ──────────────────────────────────────────────────
+const EXOS = {
+  squat:     { name:'Squat avec haltères',                     how:'Tenez un haltère dans chaque main, bras le long du corps. Pieds écartés à la largeur des épaules, orteils légèrement ouverts vers l\'extérieur. Descendez lentement comme pour vous asseoir sur une chaise (3 secondes à la descente), genoux dans l\'axe des orteils, dos bien droit. Remontez en poussant sur les talons. Posez une chaise devant vous si besoin pour l\'équilibre au début.' },
+  fente:     { name:'Fente sur place',                         how:'Debout, haltères dans chaque main. Faites un grand pas en avant avec la jambe droite. Descendez le genou gauche vers le sol (sans le toucher). Le genou avant ne dépasse pas le bout du pied. Tronc bien vertical. Revenez à la position de départ, alternez les jambes. Prenez appui sur une chaise si besoin.' },
+  hipthrust: { name:'Poussée fessiers sur chaise',             how:'Asseyez-vous sur le bord d\'une chaise solide, dos appuyé contre le dossier. Placez un haltère tenu à deux mains sur le haut des cuisses. Poussez les hanches vers le plafond en contractant fort les fessiers, tenez 1 seconde en haut, redescendez lentement. Dos plat tout au long du mouvement.' },
+  rdl1j:     { name:'Soulevé de terre 1 jambe',                how:'C\'est l\'exercice le plus important du programme. Debout sur la jambe droite, un haltère dans la main gauche. Penchez le buste en avant en levant la jambe gauche derrière vous (comme une balance). Descendez l\'haltère le long de la jambe jusqu\'au genou, dos parfaitement droit. Remontez lentement. Travaille les ischios, les fessiers et l\'équilibre en même temps.' },
+  mollets:   { name:'Mollets debout + équilibre',              how:'Debout, haltères dans les mains. Montez lentement sur la pointe des pieds, tenez 2 secondes en haut, redescendez. Après chaque série, posez les haltères et restez 20 à 30 secondes sur un seul pied, regard fixe sur un point devant vous.' },
+  overhead:  { name:'Développé épaules (pousser vers le haut)',how:'Assise sur une chaise, dos droit, pieds à plat au sol. Tenez un haltère dans chaque main à hauteur des oreilles, coudes à 90°. Poussez les haltères vers le plafond jusqu\'à tendre les bras. Redescendez lentement. Ne creusez pas le dos au moment de pousser.' },
+  rowing:    { name:'Tirage 1 bras (rowing)',                   how:'Posez le genou gauche et la main gauche sur le lit ou un banc pour vous soutenir. La jambe droite est au sol, dos plat, parallèle au sol. Haltère dans la main droite, bras tendu vers le bas. Ramenez le coude vers le plafond en serrant l\'omoplate droite. Descendez lentement. Alternez les côtés.' },
+  curlelev:  { name:'Curl biceps + élévations latérales',      how:'D\'abord le curl : debout ou assise, paumes vers le haut. Pliez les coudes pour remonter les haltères vers les épaules, coudes collés au corps. Redescendez lentement. Enchaînez immédiatement avec les élévations : bras arrondis, levez les bras sur les côtés jusqu\'à l\'horizontale. Puis reposez 30 à 45 secondes.' },
+  triceps:   { name:'Extension triceps couché',                how:'Allongée sur le dos (tapis ou lit ferme). Haltères dans les mains, bras tendus vers le plafond, paumes face à face. Pliez lentement les coudes pour descendre les haltères vers le front. Tendez les bras à nouveau. Mouvement lent et contrôlé uniquement.' },
+  oiseau:    { name:'Oiseau — arrière des épaules',            how:'Debout, penchez le buste en avant à 45°, dos droit. Haltères dans les mains, paumes face à face, bras légèrement arrondis. Levez les bras sur les côtés comme des ailes, jusqu\'à l\'horizontale. Serrez les omoplates en haut. Redescendez lentement.' },
+  rdl2j:     { name:'Soulevé de terre (deux jambes)',          how:'Debout, pieds à largeur de hanches, un haltère dans chaque main devant les cuisses. Penchez le buste en avant en gardant le dos parfaitement droit (imaginez un plateau en verre posé sur le dos). Les haltères glissent le long des jambes vers le sol. Remontez en poussant les hanches vers l\'avant.' },
+  developpe: { name:'Développé couché haltères',              how:'Allongée sur le dos, tapis ou lit ferme. Haltères dans les mains, coudes à 90° au niveau de la poitrine. Poussez les haltères vers le plafond en tendant les bras, redescendez lentement jusqu\'à sentir un léger étirement dans la poitrine.' },
+  goblet:    { name:'Goblet squat (haltère à deux mains)',    how:'Tenez un seul haltère verticalement à deux mains devant la poitrine. Pieds légèrement plus écartés que les épaules, orteils ouverts. Descendez profondément en squat, coudes qui touchent l\'intérieur des genoux en bas. Talons au sol tout au long du mouvement.' },
+  planche:   { name:'Planche avant (gainage)',                how:'À plat ventre, appui sur les avant-bras et les orteils. Corps parfaitement droit de la tête aux talons. Respirez normalement. Si c\'est trop difficile, posez les genoux au sol et progressez sur la durée chaque semaine.' },
+  deadbug:   { name:'Dead bug (coordination abdominale)',     how:'Allongée sur le dos, bras tendus vers le plafond, jambes pliées à 90° en l\'air. Descendez simultanément le bras droit vers le sol derrière la tête ET la jambe gauche vers le sol devant vous, sans poser. Revenez au centre. Alternez. Le bas du dos reste bien plaqué au sol tout au long.' },
+};
+
+// ── PROGRAMME 8 SEMAINES ──────────────────────────────────────────
+// Charges multiples de 2 kg · A=Mardi · B=Mercredi · C=Vendredi
+const SEMAINES = [
+  { num:1, phase:'Apprentissage',
+    note:'Première semaine : priorité à la technique, pas à la difficulté. Regardez-vous dans un miroir si possible. C\'est normal si c\'est facile — les fondations se posent maintenant.',
+    seances:{
+      A:{ label:'Bas du corps', duree:'30 min', exos:[
+        {id:'squat',     charge:'2 barres seules · 2 × 2 kg', series:3, reps:'10 reps'},
+        {id:'fente',     charge:'Sans haltères', series:3, reps:'8 / jambe'},
+        {id:'hipthrust', charge:'1 haltère · 4 kg', series:3, reps:'12 reps'},
+        {id:'rdl1j',     charge:'1 haltère · 2 kg', series:3, reps:'8 / jambe'},
+        {id:'mollets',   charge:'Sans haltères', series:3, reps:'12 reps + 15s équilibre'},
+      ]},
+      B:{ label:'Haut du corps', duree:'30 min', exos:[
+        {id:'overhead',  charge:'2 × 2 kg (barre seule)', series:3, reps:'10 reps'},
+        {id:'rowing',    charge:'1 haltère · 2 kg', series:3, reps:'10 / bras'},
+        {id:'curlelev',  charge:'2 × 2 kg (barre seule)', series:3, reps:'10 reps chaque'},
+        {id:'triceps',   charge:'2 × 2 kg (barre seule)', series:3, reps:'10 reps'},
+        {id:'oiseau',    charge:'2 × 2 kg (barre seule)', series:3, reps:'10 reps'},
+      ]},
+      C:{ label:'Full body & gainage', duree:'28 min', exos:[
+        {id:'rdl2j',     charge:'2 × 2 kg (barre seule)', series:3, reps:'10 reps'},
+        {id:'developpe', charge:'2 × 2 kg (barre seule)', series:3, reps:'10 reps'},
+        {id:'goblet',    charge:'1 haltère · 4 kg', series:3, reps:'10 reps'},
+        {id:'planche',   charge:'Sans charge', series:3, reps:'20 s'},
+        {id:'deadbug',   charge:'Sans haltère', series:3, reps:'6 / côté'},
+      ]}
+    }
+  },
+  { num:2, phase:'Apprentissage',
+    note:'Même programme, quelques reps en plus. Les mouvements deviennent familiers — concentrez-vous sur la descente lente (3 secondes) dans le squat et le soulevé de terre.',
+    seances:{
+      A:{ label:'Bas du corps', duree:'32 min', exos:[
+        {id:'squat',     charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps'},
+        {id:'fente',     charge:'2 × 2 kg (barre seule)', series:3, reps:'10 / jambe'},
+        {id:'hipthrust', charge:'1 haltère · 4 kg', series:3, reps:'14 reps'},
+        {id:'rdl1j',     charge:'1 haltère · 2 kg', series:3, reps:'10 / jambe'},
+        {id:'mollets',   charge:'2 × 2 kg (barre seule)', series:3, reps:'14 reps + 20s équilibre'},
+      ]},
+      B:{ label:'Haut du corps', duree:'32 min', exos:[
+        {id:'overhead',  charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps'},
+        {id:'rowing',    charge:'1 haltère · 2 kg', series:3, reps:'12 / bras'},
+        {id:'curlelev',  charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps chaque'},
+        {id:'triceps',   charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps'},
+        {id:'oiseau',    charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps'},
+      ]},
+      C:{ label:'Full body & gainage', duree:'30 min', exos:[
+        {id:'rdl2j',     charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps'},
+        {id:'developpe', charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps'},
+        {id:'goblet',    charge:'1 haltère · 4 kg', series:3, reps:'12 reps'},
+        {id:'planche',   charge:'Sans charge', series:3, reps:'25 s'},
+        {id:'deadbug',   charge:'Sans haltère', series:3, reps:'8 / côté'},
+      ]}
+    }
+  },
+  { num:3, phase:'Progression',
+    note:'On augmente les charges. Ajoutez un disque de 1 kg de chaque côté = 4 kg par haltère. Si un mouvement ne se fait pas proprement avec le nouveau poids, restez au poids précédent.',
+    seances:{
+      A:{ label:'Bas du corps', duree:'33 min', exos:[
+        {id:'squat',     charge:'2 × 4 kg (barre + 1 kg de chaque côté)', series:4, reps:'10 reps'},
+        {id:'fente',     charge:'2 × 2 kg (barre seule)', series:3, reps:'10 / jambe'},
+        {id:'hipthrust', charge:'1 haltère · 6 kg', series:3, reps:'14 reps'},
+        {id:'rdl1j',     charge:'1 haltère · 4 kg', series:3, reps:'10 / jambe'},
+        {id:'mollets',   charge:'2 × 4 kg', series:3, reps:'14 reps + 25s équilibre'},
+      ]},
+      B:{ label:'Haut du corps', duree:'33 min', exos:[
+        {id:'overhead',  charge:'2 × 4 kg', series:4, reps:'10 reps'},
+        {id:'rowing',    charge:'1 haltère · 4 kg', series:3, reps:'12 / bras'},
+        {id:'curlelev',  charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps chaque'},
+        {id:'triceps',   charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps'},
+        {id:'oiseau',    charge:'2 × 2 kg (barre seule)', series:3, reps:'12 reps'},
+      ]},
+      C:{ label:'Full body & gainage', duree:'30 min', exos:[
+        {id:'rdl2j',     charge:'2 × 4 kg', series:4, reps:'10 reps'},
+        {id:'developpe', charge:'2 × 4 kg', series:3, reps:'12 reps'},
+        {id:'goblet',    charge:'1 haltère · 6 kg', series:3, reps:'12 reps'},
+        {id:'planche',   charge:'Sans charge', series:3, reps:'30 s'},
+        {id:'deadbug',   charge:'1 haltère · 2 kg', series:3, reps:'8 / côté'},
+      ]}
+    }
+  },
+  { num:4, phase:'Progression',
+    note:'Consolidation : mêmes charges que la semaine 3, on ajoute des reps et une série. Si tout passe facilement avec bonne technique, prête à monter la semaine prochaine.',
+    seances:{
+      A:{ label:'Bas du corps', duree:'35 min', exos:[
+        {id:'squat',     charge:'2 × 4 kg', series:4, reps:'12 reps'},
+        {id:'fente',     charge:'2 × 4 kg', series:4, reps:'10 / jambe'},
+        {id:'hipthrust', charge:'1 haltère · 6 kg', series:4, reps:'14 reps'},
+        {id:'rdl1j',     charge:'1 haltère · 4 kg', series:3, reps:'12 / jambe'},
+        {id:'mollets',   charge:'2 × 4 kg', series:3, reps:'15 reps + 30s équilibre'},
+      ]},
+      B:{ label:'Haut du corps', duree:'35 min', exos:[
+        {id:'overhead',  charge:'2 × 4 kg', series:4, reps:'12 reps'},
+        {id:'rowing',    charge:'1 haltère · 4 kg', series:4, reps:'12 / bras'},
+        {id:'curlelev',  charge:'2 × 2 kg (barre seule)', series:3, reps:'14 reps chaque'},
+        {id:'triceps',   charge:'2 × 2 kg (barre seule)', series:3, reps:'14 reps'},
+        {id:'oiseau',    charge:'2 × 2 kg (barre seule)', series:3, reps:'14 reps'},
+      ]},
+      C:{ label:'Full body & gainage', duree:'32 min', exos:[
+        {id:'rdl2j',     charge:'2 × 4 kg', series:4, reps:'12 reps'},
+        {id:'developpe', charge:'2 × 4 kg', series:4, reps:'12 reps'},
+        {id:'goblet',    charge:'1 haltère · 6 kg', series:3, reps:'14 reps'},
+        {id:'planche',   charge:'Sans charge', series:3, reps:'35 s'},
+        {id:'deadbug',   charge:'1 haltère · 2 kg', series:3, reps:'10 / côté'},
+      ]}
+    }
+  },
+  { num:5, phase:'Intensification',
+    note:'On monte les charges et on introduit les supersets : curl + élévations et triceps + oiseau se font enchaînés sans pause. Les repos passent à 45 secondes entre les séries.',
+    seances:{
+      A:{ label:'Bas du corps', duree:'35 min', exos:[
+        {id:'squat',     charge:'2 × 6 kg (barre + 2 kg de chaque côté)', series:4, reps:'10 reps'},
+        {id:'fente',     charge:'2 × 4 kg', series:4, reps:'10 / jambe'},
+        {id:'hipthrust', charge:'1 haltère · 8 kg', series:4, reps:'14 reps'},
+        {id:'rdl1j',     charge:'1 haltère · 6 kg', series:4, reps:'10 / jambe'},
+        {id:'mollets',   charge:'2 × 4 kg', series:3, reps:'15 reps + 30s équilibre'},
+      ]},
+      B:{ label:'Haut du corps', duree:'35 min', exos:[
+        {id:'overhead',  charge:'2 × 6 kg', series:4, reps:'10 reps'},
+        {id:'rowing',    charge:'1 haltère · 6 kg', series:4, reps:'12 / bras'},
+        {id:'curlelev',  charge:'2 × 2 kg — enchaînés sans pause', series:4, reps:'12 reps chaque'},
+        {id:'triceps',   charge:'2 × 2 kg — enchaîné avec oiseau', series:3, reps:'12 reps'},
+        {id:'oiseau',    charge:'2 × 2 kg — enchaîné avec triceps', series:3, reps:'12 reps'},
+      ]},
+      C:{ label:'Full body & gainage', duree:'33 min', exos:[
+        {id:'rdl2j',     charge:'2 × 6 kg', series:4, reps:'10 reps'},
+        {id:'developpe', charge:'2 × 6 kg', series:4, reps:'12 reps'},
+        {id:'goblet',    charge:'1 haltère · 8 kg', series:4, reps:'12 reps'},
+        {id:'planche',   charge:'Sans charge', series:3, reps:'40 s'},
+        {id:'deadbug',   charge:'1 haltère · 2 kg', series:3, reps:'10 / côté'},
+      ]}
+    }
+  },
+  { num:6, phase:'Intensification',
+    note:'Consolidation des charges de la semaine 5 avec plus de volume. C\'est normal de sentir la brûlure musculaire. Repos : 45 secondes entre les séries.',
+    seances:{
+      A:{ label:'Bas du corps', duree:'37 min', exos:[
+        {id:'squat',     charge:'2 × 6 kg', series:4, reps:'12 reps'},
+        {id:'fente',     charge:'2 × 4 kg', series:4, reps:'12 / jambe'},
+        {id:'hipthrust', charge:'1 haltère · 8 kg', series:4, reps:'15 reps'},
+        {id:'rdl1j',     charge:'1 haltère · 6 kg', series:4, reps:'12 / jambe'},
+        {id:'mollets',   charge:'2 × 6 kg', series:3, reps:'15 reps + 35s équilibre'},
+      ]},
+      B:{ label:'Haut du corps', duree:'37 min', exos:[
+        {id:'overhead',  charge:'2 × 6 kg', series:4, reps:'12 reps'},
+        {id:'rowing',    charge:'1 haltère · 6 kg', series:4, reps:'14 / bras'},
+        {id:'curlelev',  charge:'2 × 4 kg — enchaînés', series:4, reps:'12 reps chaque'},
+        {id:'triceps',   charge:'2 × 2 kg — enchaîné avec oiseau', series:4, reps:'12 reps'},
+        {id:'oiseau',    charge:'2 × 2 kg — enchaîné avec triceps', series:4, reps:'12 reps'},
+      ]},
+      C:{ label:'Full body & gainage', duree:'35 min', exos:[
+        {id:'rdl2j',     charge:'2 × 6 kg', series:4, reps:'12 reps'},
+        {id:'developpe', charge:'2 × 6 kg', series:4, reps:'14 reps'},
+        {id:'goblet',    charge:'1 haltère · 8 kg', series:4, reps:'14 reps'},
+        {id:'planche',   charge:'Sans charge', series:4, reps:'40 s'},
+        {id:'deadbug',   charge:'1 haltère · 2 kg', series:3, reps:'12 / côté'},
+      ]}
+    }
+  },
+  { num:7, phase:'Peak',
+    note:'Dernière montée en charge. Toutes les séries doivent être complètes avec une bonne technique. Si la forme déraille, revenir au poids précédent sans hésiter.',
+    seances:{
+      A:{ label:'Bas du corps', duree:'38 min', exos:[
+        {id:'squat',     charge:'2 × 8 kg (barre + 3 kg de chaque côté)', series:4, reps:'10 reps'},
+        {id:'fente',     charge:'2 × 6 kg', series:4, reps:'10 / jambe'},
+        {id:'hipthrust', charge:'1 haltère · 10 kg', series:4, reps:'14 reps'},
+        {id:'rdl1j',     charge:'1 haltère · 6 kg', series:4, reps:'10 / jambe'},
+        {id:'mollets',   charge:'2 × 6 kg', series:4, reps:'15 reps + 40s équilibre'},
+      ]},
+      B:{ label:'Haut du corps', duree:'38 min', exos:[
+        {id:'overhead',  charge:'2 × 6 kg', series:4, reps:'10 reps'},
+        {id:'rowing',    charge:'1 haltère · 8 kg', series:4, reps:'12 / bras'},
+        {id:'curlelev',  charge:'2 × 4 kg — enchaînés', series:4, reps:'12 reps chaque'},
+        {id:'triceps',   charge:'2 × 4 kg — enchaîné avec oiseau', series:4, reps:'12 reps'},
+        {id:'oiseau',    charge:'2 × 4 kg — enchaîné avec triceps', series:4, reps:'12 reps'},
+      ]},
+      C:{ label:'Full body & gainage', duree:'36 min', exos:[
+        {id:'rdl2j',     charge:'2 × 8 kg', series:4, reps:'10 reps'},
+        {id:'developpe', charge:'2 × 6 kg', series:4, reps:'12 reps'},
+        {id:'goblet',    charge:'1 haltère · 10 kg', series:4, reps:'12 reps'},
+        {id:'planche',   charge:'Sans charge', series:4, reps:'45 s'},
+        {id:'deadbug',   charge:'1 haltère · 2 kg', series:4, reps:'12 / côté'},
+      ]}
+    }
+  },
+  { num:8, phase:'Peak',
+    note:'Dernière semaine du cycle ! Mêmes charges que la semaine 7 avec quelques reps en plus. Après ça, on fait un bilan et on définit le prochain cycle ensemble.',
+    seances:{
+      A:{ label:'Bas du corps', duree:'40 min', exos:[
+        {id:'squat',     charge:'2 × 8 kg', series:4, reps:'12 reps'},
+        {id:'fente',     charge:'2 × 6 kg', series:4, reps:'12 / jambe'},
+        {id:'hipthrust', charge:'1 haltère · 10 kg', series:4, reps:'15 reps'},
+        {id:'rdl1j',     charge:'1 haltère · 6 kg', series:4, reps:'12 / jambe'},
+        {id:'mollets',   charge:'2 × 6 kg', series:4, reps:'15 reps + 45s équilibre'},
+      ]},
+      B:{ label:'Haut du corps', duree:'40 min', exos:[
+        {id:'overhead',  charge:'2 × 6 kg', series:4, reps:'12 reps'},
+        {id:'rowing',    charge:'1 haltère · 8 kg', series:4, reps:'14 / bras'},
+        {id:'curlelev',  charge:'2 × 4 kg — enchaînés', series:4, reps:'14 reps chaque'},
+        {id:'triceps',   charge:'2 × 4 kg — enchaîné avec oiseau', series:4, reps:'14 reps'},
+        {id:'oiseau',    charge:'2 × 4 kg — enchaîné avec triceps', series:4, reps:'14 reps'},
+      ]},
+      C:{ label:'Full body & gainage', duree:'38 min', exos:[
+        {id:'rdl2j',     charge:'2 × 8 kg', series:4, reps:'12 reps'},
+        {id:'developpe', charge:'2 × 6 kg', series:4, reps:'14 reps'},
+        {id:'goblet',    charge:'1 haltère · 10 kg', series:4, reps:'14 reps'},
+        {id:'planche',   charge:'Sans charge', series:4, reps:'50 s'},
+        {id:'deadbug',   charge:'1 haltère · 2 kg', series:4, reps:'12 / côté'},
+      ]}
+    }
+  },
+];
+
+// ── UTILS ─────────────────────────────────────────────────────────
+function getMondayOf(d) {
+  const date = new Date(d);
+  const day = date.getDay() === 0 ? 7 : date.getDay();
+  date.setDate(date.getDate() - day + 1);
+  date.setHours(0,0,0,0);
+  return date;
+}
+function getWeekNum() {
+  const diff = Math.round((getMondayOf(new Date()) - getMondayOf(PROGRAMME_START)) / (7*86400000));
+  if (diff < 0) return 0;
+  if (diff >= 8) return 9;
+  return diff + 1;
+}
+function getTodayIdx() {
+  const d = new Date().getDay();
+  return d === 0 ? 6 : d - 1;
+}
+function fmtDate() {
+  const d = new Date();
+  const D = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  const M = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  return D[d.getDay()] + ' ' + d.getDate() + ' ' + M[d.getMonth()];
+}
+function getAge() {
+  const now = new Date();
+  let y = now.getFullYear() - BIRTH.getFullYear();
+  let m = now.getMonth() - BIRTH.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < BIRTH.getDate())) y--;
+  return y + ' ans';
+}
+function getNextSeanceDay(todayIdx) {
+  for (let i = 1; i <= 7; i++) {
+    const d = WEEK[(todayIdx + i) % 7];
+    if (d.seance) return d;
+  }
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function toggleHow(uid) {
+  document.getElementById('how-'+uid).classList.toggle('open');
+  document.getElementById('tog-'+uid).classList.toggle('open');
+}
+
+function renderSeance(type, s, cc) {
+  return `<div class="seance-card ${cc}">
+    <div class="seance-header">
+      <div class="seance-letter">${type}</div>
+      <div class="seance-info">
+        <div class="seance-name">Séance ${type} — ${s.label}</div>
+        <div class="seance-meta">Aujourd'hui · ${s.duree}</div>
+      </div>
+    </div>
+    <div class="warmup-banner">◎ Avant : 5 min mobilité — chevilles, hanches, épaules. Après : 5 min étirements statiques.</div>
+    <div class="exo-list">
+      ${s.exos.map((e,i) => {
+        const b = EXOS[e.id], uid = type+i;
+        return `<div class="exo-item">
+          <div class="exo-top">
+            <div>
+              <div class="exo-num">Exercice ${String(i+1).padStart(2,'0')}</div>
+              <div class="exo-name">${b.name}</div>
+              <div class="exo-charge">${e.charge}</div>
+              <span class="exo-toggle" id="tog-${uid}" onclick="toggleHow('${uid}')">Comment faire</span>
+              <div class="exo-how" id="how-${uid}">${b.how}</div>
+            </div>
+            <div class="exo-sets ${cc}">${e.series}<small>${e.reps}</small></div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function render() {
+  const weekNum  = getWeekNum();
+  const todayIdx = getTodayIdx();
+  const today    = WEEK[todayIdx];
+
+  document.getElementById('hdr-date').textContent = fmtDate();
+  document.getElementById('hdr-age').textContent  = getAge();
+
+  const wb = document.getElementById('hdr-week-badge');
+  if (weekNum === 0) {
+    wb.textContent = 'Programme à venir · 20 avril';
+    wb.style.cssText = 'background:rgba(0,0,0,.06);color:var(--muted);border:1px solid var(--border2);';
+  } else if (weekNum <= 8) {
+    wb.textContent = `Semaine ${weekNum} · ${SEMAINES[weekNum-1].phase}`;
+    wb.style.cssText = 'background:var(--a-bg);color:var(--accent);border:1px solid rgba(201,58,31,.25);';
+  } else {
+    wb.textContent = '🎉 8 semaines terminées !';
+    wb.style.cssText = 'background:rgba(26,158,74,.1);color:var(--green);border:1px solid rgba(26,158,74,.25);';
+  }
+  document.getElementById('footer-week').textContent =
+    weekNum >= 1 && weekNum <= 8 ? `SEM ${weekNum}/8 · ${SEMAINES[weekNum-1].phase.toUpperCase()}` : '';
+
+  let html = '';
+
+  // Planning strip
+  html += `<section>
+    <div class="slabel">Planning de la semaine</div>
+    <div class="week-strip">
+      ${WEEK.map(d => `<div class="w-day ${d.idx===todayIdx?'today':''}">
+        <div class="w-dname">${d.nom}</div>
+        <span class="w-badge ${d.badge}">${d.label}</span>
+      </div>`).join('')}
+    </div>
+    <div class="note-box">Gym le lundi · Aqua gym le jeudi · Séances haltères : mardi (A), mercredi (B), vendredi (C) — un jour de récupération entre chaque.</div>
+  </section>`;
+
+  if (weekNum === 0) {
+    html += `<section style="text-align:center;padding:48px 20px;">
+      <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:12px;">À très bientôt, Jacqueline !</div>
+      <div style="color:var(--muted);font-size:12px;line-height:1.8;">Le programme démarre le lundi 20 avril.<br>D'ici là, continuez la gym et l'aqua gym normalement.</div>
+    </section>`;
+
+  } else if (weekNum <= 8) {
+    const sem = SEMAINES[weekNum-1];
+
+    if (today.seance) {
+      // ── JOUR SÉANCE HALTÈRES ────────────────────────────────────
+      const cc = today.seance==='A'?'sa':today.seance==='B'?'sb':'sc';
+      html += `<section>
+        <div class="slabel">Votre séance d'aujourd'hui</div>
+        ${renderSeance(today.seance, sem.seances[today.seance], cc)}
+        <div class="warn-box" style="margin-top:10px;">Rappel : jamais de douleur articulaire. Une gêne musculaire est normale, mais si un genou ou une épaule fait mal — on arrête l'exercice.</div>
+      </section>`;
+
+    } else if (today.type === 'gym') {
+      // ── LUNDI : GYM ─────────────────────────────────────────────
+      html += `<section>
+        <div class="slabel">Aujourd'hui</div>
+        <div class="day-card">
+          <div class="day-icon">🏃‍♀️</div>
+          <div class="day-title">Cours de gym</div>
+          <div class="day-sub">Profitez bien du cours !<br>Hydratez-vous bien avant et après.</div>
+        </div>
+      </section>`;
+
+    } else if (today.type === 'aqua') {
+      // ── JEUDI : AQUA GYM ────────────────────────────────────────
+      html += `<section>
+        <div class="slabel">Aujourd'hui</div>
+        <div class="day-card">
+          <div class="day-icon">🏊‍♀️</div>
+          <div class="day-title">Aqua gym</div>
+          <div class="day-sub">Excellent travail musculaire dans l'eau — doux pour les articulations.<br>L'aqua gym complète parfaitement les séances haltères.</div>
+        </div>
+      </section>`;
+
+    } else {
+      // ── SAMEDI / DIMANCHE : REPOS + cardio optionnel ─────────────
+      const next = getNextSeanceDay(todayIdx);
+      const nextData = sem.seances[next.seance];
+      html += `<section>
+        <div class="slabel">Aujourd'hui</div>
+        <div class="day-card">
+          <div class="day-icon">✦</div>
+          <div class="day-title">Jour de repos</div>
+          <div class="day-sub">Le repos fait partie du programme.<br>C'est pendant la récupération que les muscles se renforcent.<br><br>Hydratez-vous bien et dormez suffisamment.</div>
+          <div class="cardio-tip">💡 Optionnel · Si vous avez de l'énergie : 15 à 20 min de vélo d'appartement ou d'elliptique à allure tranquille (on doit pouvoir parler sans s'essouffler). Pas d'obligation — c'est un bonus, pas une contrainte.</div>
+        </div>
+      </section>
+      <section>
+        <div class="slabel">Prochaine séance</div>
+        <div class="next-card">
+          <div>
+            <div class="next-label">Séance ${next.seance}</div>
+            <div class="next-val">${nextData.label} · ${next.nom}</div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);">${nextData.duree}</div>
+        </div>
+      </section>`;
+    }
+
+    // Note de la semaine
+    html += `<section>
+      <div class="slabel">Note de la semaine ${weekNum}</div>
+      <div class="note-box" style="font-size:12px;line-height:1.7;">${sem.note}</div>
+    </section>`;
+
+  } else {
+    html += `<section style="text-align:center;padding:40px 20px;">
+      <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--green);margin-bottom:12px;">Félicitations, Jacqueline !</div>
+      <div style="color:var(--muted);font-size:13px;line-height:1.8;">Les 8 semaines sont terminées.<br>C'est le moment de faire un bilan et de définir le prochain cycle.</div>
+    </section>`;
+  }
+
+  // Progression
+  if (weekNum >= 1) {
+    const phases = ['Appr.','Appr.','Prog.','Prog.','Intens.','Intens.','Peak','Peak'];
+    html += `<section>
+      <div class="prog-track">
+        <div class="prog-header">
+          <div class="prog-title">Progression 8 semaines</div>
+          <div class="prog-count">${weekNum<=8?weekNum+'/8':'Terminé ✓'}</div>
+        </div>
+        <div class="prog-weeks">
+          ${Array.from({length:8},(_,i)=>{
+            const n=i+1, cls=n<weekNum?'done':n===weekNum?'current':'';
+            return `<div class="prog-week ${cls}">
+              <div class="prog-wnum">S${n}</div>
+              <div class="prog-wlabel">${phases[i]}</div>
+              <div class="prog-dot"></div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </section>`;
+  }
+
+  // Tips
+  html += `<section>
+    <div class="slabel">Points clés</div>
+    <div class="tips-grid">
+      <div class="tip-card"><div class="tip-num">01</div><div class="tip-title">Jamais de douleur</div><div class="tip-body">Gêne musculaire ok, douleur articulaire non. Réduire l'amplitude ou le poids sans hésiter.</div></div>
+      <div class="tip-card"><div class="tip-num">02</div><div class="tip-title">Descente lente</div><div class="tip-body">La phase de descente doit durer 2 à 3 secondes dans chaque exercice. C'est là que le muscle travaille le plus.</div></div>
+      <div class="tip-card"><div class="tip-num">03</div><div class="tip-title">Protéines à chaque repas</div><div class="tip-body">Yaourt, œufs, poisson, volaille, fromage. Viser 75–85g par jour pour soutenir le renforcement.</div></div>
+    </div>
+  </section>`;
+
+  document.getElementById('main-content').innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
